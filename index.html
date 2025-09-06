@@ -98,36 +98,30 @@
     <a href="#">Downloads</a>
   </nav>
 
-  <script>
-    const API_KEY = "4f2d18a6472fe18761a98b51c16d577d";
-    const API_URL = https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY};
+ <script>
+  const API_KEY = "4f2d18a6472fe18761a98b51c16d577d";
+  const API_URL = https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1;
 
-    const moviesContainer = document.getElementById("movies");
+  const moviesContainer = document.getElementById("movies");
 
-    async function fetchMovies() {
-      try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        moviesContainer.innerHTML = data.results.map(movie => `
-          <div class="movie">
-            <img src="https://image.tmdb.org/t/p/w300${movie.poster_path}" alt="${movie.title}">
-            <h3>${movie.title}</h3>
-          </div>
-        `).join("");
-      } catch (error) {
-        moviesContainer.innerHTML = "<p>⚠️ Failed to load movies</p>";
-      }
+  async function fetchMovies() {
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      moviesContainer.innerHTML = data.results.map(movie => `
+        <div class="movie">
+          <img src="https://image.tmdb.org/t/p/w300${movie.poster_path}" alt="${movie.title}">
+          <h3>${movie.title}</h3>
+        </div>
+      `).join("");
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+      moviesContainer.innerHTML = "<p>⚠️ Failed to load movies</p>";
     }
+  }
 
-    fetchMovies();
-
-    function toggleSearch() {
-      const input = document.getElementById("searchInput");
-      input.style.display = input.style.display === "block" ? "none" : "block";
-      if (input.style.display === "block") {
-        input.focus();
-      }
-    }
-  </script>
+  fetchMovies();
+</script>
 </body>
 </html>
+
