@@ -1,290 +1,133 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>CineBox — Home</title>
-<style>
-  :root{
-    --bg:#0b0b0b; --card:#141414; --muted:#9aa0a6; --accent:#ff3c3c;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#fff;background:var(--bg)}
-  header{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 16px;background:#0e0e0e;border-bottom:1px solid rgba(255,255,255,0.03)}
-  .brand{display:flex;align-items:center;gap:10px}
-  .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#ff3c3c,#ff7a50);display:flex;align-items:center;justify-content:center;font-weight:bold}
-  h1{font-size:18px;margin:0}
-  #search{width:48%;max-width:420px;padding:8px 10px;border-radius:10px;border:0;background:#111;color:#ddd}
-  main{padding:12px 12px 88px}
-  .section{margin-bottom:20px}
-  .section h2{margin:0 0 8px 8px;font-size:16px}
-  .row{display:flex;gap:10px;overflow-x:auto;padding:8px 6px}
-  .row::-webkit-scrollbar{height:8px}
-  .card{min-width:150px;background:var(--card);border-radius:10px;overflow:hidden;flex:0 0 150px;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,0.6)}
-  .poster{width:100%;height:220px;object-fit:cover;display:block}
-  .card .meta{padding:8px}
-  .card h3{font-size:14px;margin:0 0 6px}
-  .card p{font-size:12px;margin:0;color:var(--muted)}
-  /* bottom nav */
-  .bottom-nav{position:fixed;left:0;right:0;bottom:0;height:64px;background:#070707;border-top:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-around}
-  .nav-btn{color:var(--muted);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:4px;background:transparent;border:0;padding:6px;cursor:pointer}
-  .nav-btn.active{color:var(--accent)}
-  /* modal */
-  .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:60}
-  .modal{width:92%;max-width:900px;background:#080808;border-radius:12px;overflow:hidden}
-  .modal .content{display:grid;grid-template-columns:1fr 360px;gap:0}
-  .modal .left{padding:12px}
-  .modal img{width:100%;height:auto;border-bottom:1px solid rgba(255,255,255,0.03)}
-  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:10px;border:0;cursor:pointer}
-  .btn.secondary{background:#222;color:#ddd}
-  /* downloads list */
-  .download-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:8px}
-  .progress{height:8px;background:#222;border-radius:8px;overflow:hidden;width:160px;margin-left:8px}
-  .progress > i{display:block;height:100%;background:linear-gradient(90deg,#ff3c3c,#ff7a50);width:0%}
-  /* search results overlay */
-  .results{position:fixed;left:12px;right:12px;top:64px;background:#060606;border-radius:8px;padding:10px;z-index:30;max-height:60vh;overflow:auto}
-  .sr-item{display:flex;gap:8px;padding:8px;border-bottom:1px solid rgba(255,255,255,0.02);cursor:pointer}
-  .sr-item img{width:60px;height:80px;object-fit:cover;border-radius:6px}
-  /* responsive */
-  @media(min-width:900px){ .card{min-width:180px;flex-basis:180px}.modal .content{grid-template-columns:1fr 360px} }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinebox</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+    }
+    header {
+      background: #ff4444;
+      padding: 0.8rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header img {
+      height: 35px;
+    }
+    .search-container {
+      position: relative;
+    }
+    .search-icon {
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .search-input {
+      display: none;
+      position: absolute;
+      top: -5px;
+      right: 30px;
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+    .movies {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .movie {
+      background: #1e1e1e;
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    }
+    .movie img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+    }
+    .movie h3 {
+      margin: 0.5rem;
+      font-size: 1rem;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #1e1e1e;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.5rem 0;
+      border-top: 1px solid #333;
+    }
+    .bottom-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <div class="brand">
-      <div class="logo">CB</div>
-      <h1>CineBox</h1>
+    <img src="https://raw.githubusercontent.com/enockthefirst/cinebox/main/logo.png" alt="Cinebox Logo">
+    <div class="search-container">
+      <span class="search-icon" onclick="toggleSearch()">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search movies...">
     </div>
-    <input id="search" placeholder="Search movies..." />
   </header>
 
-  <main id="app">
-    <!-- dynamic content injected here -->
-  </main>
+  <div class="movies" id="movies"></div>
 
-  <!-- bottom nav -->
-  <div class="bottom-nav" id="nav">
-    <button class="nav-btn active" data-tab="home">Home</button>
-    <button class="nav-btn" data-tab="movies">Movies</button>
-    <button class="nav-btn" data-tab="tv">TV Shows</button>
-    <button class="nav-btn" data-tab="downloads">Downloads</button>
-  </div>
+  <nav class="bottom-nav">
+    <a href="#">Home</a>
+    <a href="#">Movies</a>
+    <a href="#">TV Shows</a>
+    <a href="#">Downloads</a>
+  </nav>
 
-  <!-- modal -->
-  <div id="modal-root" style="display:none"></div>
-  <div id="search-results" style="display:none"></div>
+  <script>
+    const API_KEY = "4f2d18a6472fe18761a98b51c16d577d";
+    const API_URL = https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY};
 
-<script>
-/* ======== CONFIG ======== */
-const API_KEY = "4f2d18a6472fe18761a98b51c16d577d"; // your TMDB key
-const IMG = "https://image.tmdb.org/t/p/w500";
+    const moviesContainer = document.getElementById("movies");
 
-/* ======== STATE ======== */
-const state = {
-  tab: "home",
-  downloads: JSON.parse(localStorage.getItem('cinebox_downloads')||'[]'),
-}
-
-/* ======== HELPERS ======== */
-function el(tag, cls){ const e=document.createElement(tag); if(cls) e.className=cls; return e }
-function saveDownloads(){ localStorage.setItem('cinebox_downloads', JSON.stringify(state.downloads)) }
-function fetchJson(url){ return fetch(url).then(r=>r.json()).catch(e=>{console.error(e);return null}) }
-
-/* ======== TEMPLATES ======== */
-async function renderHome(){
-  const container = el('div')
-  container.innerHTML = `
-    <section class="section"><h2>Popular</h2><div class="row" id="popular-row"></div></section>
-    <section class="section"><h2>Trending</h2><div class="row" id="trending-row"></div></section>
-    <section class="section"><h2>Top Rated</h2><div class="row" id="top-row"></div></section>
-    <section class="section"><h2>Now Playing</h2><div class="row" id="playing-row"></div></section>
-  `
-  // fetch sets in parallel
-  const [popular, trending, topRated, nowPlaying] = await Promise.all([
-    fetchJson(https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1),
-    fetchJson(https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}),
-    fetchJson(https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1),
-    fetchJson(https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1)
-  ])
-  if(popular) populateRow(popular.results, document.getElementById('popular-row'))
-  if(trending) populateRow(trending.results, document.getElementById('trending-row'))
-  if(topRated) populateRow(topRated.results, document.getElementById('top-row'))
-  if(nowPlaying) populateRow(nowPlaying.results, document.getElementById('playing-row'))
-  return container
-}
-
-async function renderMovies(){
-  const wrapper = el('div')
-  wrapper.innerHTML = <section class="section"><h2>Popular Movies</h2><div class="row" id="movies-row"></div></section>
-  const popular = await fetchJson(https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1)
-  if(popular) populateRow(popular.results, wrapper.querySelector('#movies-row'))
-  return wrapper
-}
-
-async function renderTV(){
-  const wrap = el('div')
-  wrap.innerHTML = <section class="section"><h2>Popular TV Shows</h2><div class="row" id="tv-row"></div></section>
-  const tv = await fetchJson(https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}&language=en-US&page=1)
-  if(tv) populateRow(tv.results, wrap.querySelector('#tv-row'), true)
-  return wrap
-}
-
-function renderDownloads(){
-  const wrap = el('div')
-  wrap.innerHTML = <section class="section"><h2>Downloads</h2><div id="dl-list"></div></section>
-  const list = wrap.querySelector('#dl-list')
-  if(state.downloads.length===0){
-    list.innerHTML = <p style="color:var(--muted)">No downloads yet.</p>
-  } else {
-    state.downloads.forEach(item=>{
-      const row = el('div','download-item')
-      const left = el('div')
-      left.innerHTML = <strong>${item.title}</strong><div style="font-size:12px;color:var(--muted)">${item.quality||''}</div>
-      const right = el('div')
-      const p = el('div','progress'); const inner=el('i'); inner.style.width = (item.progress||0)+'%'; p.appendChild(inner)
-      const watch = el('button'); watch.className='btn'; watch.style.marginLeft='8px'
-      watch.textContent = (item.progress>=10 ? '▶ Watch' : 'Locked')
-      watch.disabled = !(item.progress>=10)
-      watch.onclick = ()=>openWatch(item)
-      right.appendChild(p); right.appendChild(watch)
-      row.appendChild(left); row.appendChild(right)
-      list.appendChild(row)
-    })
-  }
-  return wrap
-}
-
-/* populate row with results. tvFlag = true -> use name/title properly */
-function populateRow(items, rowEl, tvFlag=false){
-  rowEl.innerHTML = ''
-  items.forEach(it=>{
-    const card = el('div','card')
-    card.onclick = ()=>openDetail(it.id, tvFlag?'tv':'movie')
-    const img = el('img','poster'); img.className='poster'
-    img.src = it.poster_path ? (IMG + it.poster_path) : ''
-    img.alt = (it.title||it.name||'')
-    const m = el('div','meta'); m.innerHTML = <h3>${it.title||it.name}</h3><p>${(it.release_date||it.first_air_date||'')}</p>
-    card.appendChild(img); card.appendChild(m)
-    rowEl.appendChild(card)
-  })
-}
-
-/* ======== DETAILS + TRAILER MODAL ======== */
-async function openDetail(id, type='movie'){
-  const root = document.getElementById('modal-root')
-  root.innerHTML = ''
-  // fetch details
-  const details = await fetchJson(https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos)
-  if(!details){ alert('Could not load details'); return }
-  const modalBack = el('div','modal-back'); modalBack.onclick = (e)=>{ if(e.target===modalBack) closeModal() }
-  const modal = el('div','modal')
-  const left = el('div','left'); left.innerHTML = <img src="${details.poster_path?IMG+details.poster_path:''}" alt="" />
-  const right = el('div'); right.style.padding='12px'
-  const title = el('h2'); title.textContent = details.title || details.name
-  const overview = el('p'); overview.textContent = details.overview || ''
-  const info = el('div'); info.style.color='var(--muted)'; info.style.margin='8px 0'; info.textContent = Rating: ${details.vote_average || 'N/A'} • ${details.release_date||details.first_air_date||''}
-  // trailer (if any)
-  let trailerHtml = ''
-  if(details.videos && details.videos.results && details.videos.results.length){
-    const vid = details.videos.results.find(v => v.site==='YouTube' && (v.type==='Trailer' || v.type==='Teaser')) || details.videos.results[0]
-    if(vid) trailerHtml = <div style="aspect-ratio:16/9"><iframe src="https://www.youtube.com/embed/${vid.key}" style="width:100%;height:100%;border:0" allowfullscreen></iframe></div>
-  }
-  const btnRow = el('div'); btnRow.style.display='flex'; btnRow.style.gap='8px'; btnRow.style.marginTop='10px'
-  const playBtn = el('button'); playBtn.className='btn'; playBtn.textContent='Watch Trailer'; playBtn.onclick = ()=>{ if(trailerHtml) openTrailer(trailerHtml); else alert('Trailer not available') }
-  const dlBtn = el('button'); dlBtn.className='btn secondary'; dlBtn.textContent='Download (simulate)'; dlBtn.onclick = ()=>queueDownload({id, title: details.title||details.name, quality:'720p', progress:0})
-  btnRow.appendChild(playBtn); btnRow.appendChild(dlBtn)
-
-  right.appendChild(title); right.appendChild(info); right.appendChild(overview); right.appendChild(btnRow)
-  modal.className='modal'; modal.appendChild(left)
-  const content = el('div','content'); content.appendChild(right)
-  modal.appendChild(content)
-  modalBack.appendChild(modal)
-  root.appendChild(modalBack); root.style.display='block'
-}
-function closeModal(){ document.getElementById('modal-root').style.display='none'; document.getElementById('modal-root').innerHTML='' }
-function openTrailer(html){ const root = document.getElementById('modal-root'); root.innerHTML = ''; const modalBack = el('div','modal-back'); const mbox = el('div'); mbox.className='modal'; mbox.innerHTML = <div style="padding:12px">${html}</div>; modalBack.appendChild(mbox); modalBack.onclick=(e)=>{ if(e.target===modalBack) closeModal() }; root.appendChild(modalBack); root.style.display='block' }
-
-/* ======== DOWNLOAD QUEUE (simulate and persist) ======== */
-function queueDownload(item){
-  // prevent duplicate
-  const exists = state.downloads.find(d=>d.title===item.title)
-  if(exists) return alert('Already queued')
-  const newItem = {...item, progress:0}
-  state.downloads.push(newItem); saveDownloads(); renderApp()
-  // start simulate
-  const id = setInterval(()=>{
-    const d = state.downloads.find(x=>x.title===item.title)
-    if(!d){ clearInterval(id); return }
-    d.progress = Math.min(100, (d.progress||0) + Math.floor(Math.random()*12)+5)
-    saveDownloads(); renderApp()
-    if(d.progress>=100) clearInterval(id)
-  }, 1200)
-}
-
-/* open watch modal for a downloaded item (play an example short clip or trailer) */
-function openWatch(item){
-  // open a small player using a sample clip (TMDB details/trailer might exist; for simplicity play trailer if possible)
-  // attempt to fetch details and play trailer:
-  (async ()=>{
-    const root = document.getElementById('modal-root')
-    root.innerHTML = ''
-    const details = await fetchJson(https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(item.title)})
-    if(details && details.results && details.results[0]){
-      const id = details.results[0].id
-      const det = await fetchJson(https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&append_to_response=videos)
-      if(det && det.videos && det.videos.results.length){
-        const vid = det.videos.results.find(v=>v.site==='YouTube') || det.videos.results[0]
-        if(vid){ openTrailer(<iframe src="https://www.youtube.com/embed/${vid.key}" style="width:100%;height:400px;border:0" allowfullscreen></iframe>); return }
+    async function fetchMovies() {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        moviesContainer.innerHTML = data.results.map(movie => `
+          <div class="movie">
+            <img src="https://image.tmdb.org/t/p/w300${movie.poster_path}" alt="${movie.title}">
+            <h3>${movie.title}</h3>
+          </div>
+        `).join("");
+      } catch (error) {
+        moviesContainer.innerHTML = "<p>⚠️ Failed to load movies</p>";
       }
     }
-    alert('No playable trailer found for this item.')
-  })()
-}
 
-/* ======== SEARCH ======== */
-const searchInput = document.getElementById('search')
-let searchTimer = null
-searchInput.addEventListener('input', (e)=>{
-  const q = e.target.value.trim()
-  if(searchTimer) clearTimeout(searchTimer)
-  if(!q){ document.getElementById('search-results').style.display='none'; return }
-  searchTimer = setTimeout(async ()=>{
-    const res = await fetchJson(https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(q)})
-    showSearchResults(res && res.results ? res.results : [])
-  }, 350)
-})
+    fetchMovies();
 
-function showSearchResults(items){
-  const box = document.getElementById('search-results'); box.innerHTML=''; box.style.display='block'; box.className='results'
-  items.forEach(it=>{
-    const row = el('div','sr-item'); row.onclick = ()=>{ openDetail(it.id,'movie'); box.style.display='none' }
-    const img = el('img'); img.src = it.poster_path ? (IMG+it.poster_path) : ''
-    const t = el('div'); t.innerHTML = <strong>${it.title}</strong><div style="font-size:12px;color:var(--muted)">${it.release_date||''}</div>
-    row.appendChild(img); row.appendChild(t); box.appendChild(row)
-  })
-}
-
-/* ======== APP RENDER (simple tab router) ======== */
-const appRoot = document.getElementById('app')
-async function renderApp(){
-  // update active nav
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===state.tab))
-  // clear
-  appRoot.innerHTML = '<div style="min-height:40vh"></div>'
-  if(state.tab==='home'){ appRoot.innerHTML=''; appRoot.appendChild(await renderHome()) }
-  if(state.tab==='movies'){ appRoot.innerHTML=''; appRoot.appendChild(await renderMovies()) }
-  if(state.tab==='tv'){ appRoot.innerHTML=''; appRoot.appendChild(await renderTV()) }
-  if(state.tab==='downloads'){ appRoot.innerHTML=''; appRoot.appendChild(renderDownloads()) }
-}
-// nav events
-document.getElementById('nav').addEventListener('click', (e)=>{
-  const btn = e.target.closest('.nav-btn'); if(!btn) return
-  state.tab = btn.dataset.tab; renderApp()
-})
-
-// initial
-renderApp()
-
-</script>
+    function toggleSearch() {
+      const input = document.getElementById("searchInput");
+      input.style.display = input.style.display === "block" ? "none" : "block";
+      if (input.style.display === "block") {
+        input.focus();
+      }
+    }
+  </script>
 </body>
 </html>
