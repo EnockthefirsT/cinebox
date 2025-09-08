@@ -107,25 +107,46 @@
 
     async function fetchMovies(url) {
       try {
-        const proxyURL = https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)};
-        const response = await fetch(proxyURL);
-        const data = await response.json();
+        // First try Codetabs proxy
+        let proxyURL = https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)};
+        let response = await fetch(proxyURL);
+        if (!response.ok) throw new Error("Codetabs failed");
+        let data = await response.json();
 
-        if (!data.results || data.results.length === 0) {
-          moviesContainer.innerHTML = "<p>No movies found.</p>";
-          return;
+        // If Codetabs doesn’t return valid data, try AllOrigins
+        if (!data.results) {
+          throw new Error("Invalid Codetabs response");
         }
 
-        moviesContainer.innerHTML = data.results.map(movie => `
-          <div class="movie">
-            <img src="${IMAGE_URL}${movie.poster_path}" alt="${movie.title}">
-            <h3>${movie.title}</h3>
-          </div>
-        `).join("");
+        displayMovies(data);
       } catch (error) {
-        console.error("Error fetching movies:", error);
-        moviesContainer.innerHTML = "<p>⚠️ Failed to load movies</p>";
+        console.warn("Codetabs failed, trying AllOrigins...");
+
+        try {
+          let proxyURL = https://api.allorigins.win/get?url=${encodeURIComponent(url)};
+          let response = await fetch(proxyURL);
+          let proxyData = await response.json();
+          let data = JSON.parse(proxyData.contents);
+          displayMovies(data);
+        } catch (finalError) {
+          console.error("Both proxies failed:", finalError);
+          moviesContainer.innerHTML = "<p>⚠️ Failed to load movies</p>";
+        }
       }
+    }
+
+    function displayMovies(data) {
+      if (!data.results || data.results.length === 0) {
+        moviesContainer.innerHTML = "<p>No movies found.</p>";
+        return;
+      }
+
+      moviesContainer.innerHTML = data.results.map(movie => `
+        <div class="movie">
+          <img src="${IMAGE_URL}${movie.poster_path}" alt="${movie.title}">
+          <h3>${movie.title}</h3>
+        </div>
+      `).join("");
     }
 
     function searchMovies() {
